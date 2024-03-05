@@ -1,24 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../models/user");
-const mongoose = require("mongoose");
+const userController = require("../controllers/userController");
 
-router.get("/", async (req, res) => {
-  try {
-    const usernames = await User.find(
-      {},
-      "first_name last_name username"
-    ).exec();
-    res.json(usernames);
-  } catch (err) {
-    return next(err);
-  }
-  // return res.json("get");
-});
+router.get("/", userController.get_users);
 
-router.post("/", (req, res) => {
-  return res.json("post");
-});
+router.post("/", userController.post_user);
 
 router.get("/:id", (req, res) => {
   return res.json(`getting ${req.params.id} info`);
