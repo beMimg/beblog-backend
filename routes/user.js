@@ -9,9 +9,7 @@ router.post("/", userController.post_user);
 
 router.get("/:id", authenticateToken, userController.get_user);
 
-router.put("/:id", (req, res) => {
-  return res.json(`update ${req.params.id}`);
-});
+router.put("/:id", authenticateToken, userController.put_user);
 
 router.delete("/:id", (req, res) => {
   return res.json(`delete ${req.params.id}`);
