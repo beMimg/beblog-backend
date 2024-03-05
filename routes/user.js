@@ -11,8 +11,6 @@ router.get("/:id", authenticateToken, userController.get_user);
 
 router.put("/:id", authenticateToken, userController.put_user);
 
-router.delete("/:id", (req, res) => {
-  return res.json(`delete ${req.params.id}`);
-});
+router.delete("/:id", authenticateToken, userController.delete_user);
 
 module.exports = router;

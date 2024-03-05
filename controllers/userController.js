@@ -2,6 +2,7 @@ const User = require("../models/user");
 const mongoose = require("mongoose");
 const { body, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
+const { invalidateToken } = require("../config/authenticate");
 
 exports.get_users = async (req, res) => {
   try {
@@ -133,10 +134,26 @@ exports.put_user = [
         admin: false,
       });
 
-      await User.findByIdAndUpdate(req.user._id, user, {});
+      await User.findByIdAndUpdate(req.user.user._id, user, {});
       res.status(200).json({ user: user });
     } catch (err) {
       return next(err);
     }
   },
 ];
+
+exports.delete_user = async (req, res, next) => {
+  try {
+    if (req.params.id !== req.user.user._id) {
+      return res
+        .status(403)
+        .json({ message: "You are not allowed to modify other users" });
+    }
+    await User.findByIdAndDelete(req.user.user._id);
+    const token = req.headers.authorization;
+    invalidateToken(token);
+    res.status(200).json({ message: "user deleted" });
+  } catch (err) {
+    return next(err);
+  }
+};
