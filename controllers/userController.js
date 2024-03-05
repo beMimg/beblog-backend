@@ -49,6 +49,7 @@ exports.post_user = [
       username: req.body.username,
       password: hashedPassword,
       creation: Date.now(),
+      admin: false,
     });
 
     if (!errors.isEmpty()) {
@@ -65,3 +66,15 @@ exports.post_user = [
     }
   },
 ];
+
+exports.get_user = async (req, res, next) => {
+  try {
+    const user = await User.findById(
+      req.params.id,
+      "first_name last_name username"
+    );
+    return res.status(200).json({ user: user });
+  } catch (err) {
+    return res.status(404).json({ message: "This user doesn't exists" });
+  }
+};

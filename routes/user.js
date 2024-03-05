@@ -1,14 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
+const { authenticateToken } = require("../config/authenticate");
 
-router.get("/", userController.get_users);
+router.get("/", authenticateToken, userController.get_users);
 
 router.post("/", userController.post_user);
 
-router.get("/:id", (req, res) => {
-  return res.json(`getting ${req.params.id} info`);
-});
+router.get("/:id", authenticateToken, userController.get_user);
 
 router.put("/:id", (req, res) => {
   return res.json(`update ${req.params.id}`);
