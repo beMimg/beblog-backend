@@ -53,14 +53,9 @@ exports.post_post = [
 exports.get_post = async (req, res, next) => {
   try {
     const post = await Post.findById(req.params.id);
-
-    if (!post) {
-      return res.status(404).json({ message: "Post not found" });
-    } else {
-      return res.status(200).json({ post: post });
-    }
+    return res.status(200).json({ post: post });
   } catch (err) {
-    return next(err);
+    return res.status(404).json({ message: "Post not found" });
   }
 };
 
@@ -89,7 +84,16 @@ exports.put_post = [
       await Post.findByIdAndUpdate(req.params.id, post, {});
       return res.status(200).json({ post: post });
     } catch (err) {
-      return next(err);
+      return res.status(404).json({ message: "Post not found" });
     }
   },
 ];
+
+exports.delete_post = async (req, res, next) => {
+  try {
+    await Post.findByIdAndDelete(req.params.id);
+    res.status(200).json({ message: `Post ${req.params.id} was deleted` });
+  } catch (err) {
+    return res.status(404).json({ message: "Post not found" });
+  }
+};
