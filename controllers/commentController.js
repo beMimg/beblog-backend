@@ -47,6 +47,7 @@ exports.get_comment = async (req, res, next) => {
     const comment = await Comment.findById(req.params.comment_id);
     const existsPost = await Post.findById(req.params.post_id, "_id");
 
+    if (comment.author._id === req.user.user._id) console.log("not the same");
     if (existsPost === null) {
       return res.status(404).json({ message: "Post not found" });
     }
@@ -64,6 +65,13 @@ exports.put_comment = async (req, res, next) => {
 
     if (existsPost === null) {
       return res.status(404).json({ message: "Post not found" });
+    }
+
+    const commentAuthor = comment.author._id.valueOf();
+    if (commentAuthor !== req.user.user._id) {
+      return res
+        .status(401)
+        .json({ message: "You are not the author of this comment" });
     }
 
     const newComment = new Comment({

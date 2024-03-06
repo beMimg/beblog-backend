@@ -73,7 +73,7 @@ exports.put_post = [
       }
 
       const post = new Post({
-        _id: post_,
+        _id: req.params.post_id,
         title: req.body.title,
         text: req.body.text,
         date: Date.now(),
