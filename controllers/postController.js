@@ -52,7 +52,7 @@ exports.post_post = [
 
 exports.get_post = async (req, res, next) => {
   try {
-    const post = await Post.findById(req.params.id);
+    const post = await Post.findById(req.params.post_id);
     return res.status(200).json({ post: post });
   } catch (err) {
     return res.status(404).json({ message: "Post not found" });
@@ -73,7 +73,7 @@ exports.put_post = [
       }
 
       const post = new Post({
-        _id: req.params.id,
+        _id: req.params.post_id,
         title: req.body.title,
         text: req.body.text,
         date: Date.now(),
@@ -81,7 +81,7 @@ exports.put_post = [
         isPublished: req.body.isPublished,
       });
 
-      await Post.findByIdAndUpdate(req.params.id, post, {});
+      await Post.findByIdAndUpdate(req.params.post_id, post, {});
       return res.status(200).json({ post: post });
     } catch (err) {
       return res.status(404).json({ message: "Post not found" });
@@ -91,8 +91,8 @@ exports.put_post = [
 
 exports.delete_post = async (req, res, next) => {
   try {
-    await Post.findByIdAndDelete(req.params.id);
-    res.status(200).json({ message: `Post ${req.params.id} was deleted` });
+    await Post.findByIdAndDelete(req.params.post_id);
+    res.status(200).json({ message: `Post ${req.params.post_id} was deleted` });
   } catch (err) {
     return res.status(404).json({ message: "Post not found" });
   }
