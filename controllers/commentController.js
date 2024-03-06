@@ -39,3 +39,18 @@ exports.post_comment = async (req, res, next) => {
     }
   } catch (err) {}
 };
+
+exports.get_comment = async (req, res, next) => {
+  try {
+    const comment = await Comment.findById(req.params.comment_id);
+    const existsPost = await Post.findById(req.params.post_id, "_id");
+
+    if (existsPost === null) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    return res.status(200).json({ comment: comment });
+  } catch (err) {
+    return res.status(404).json({ message: "Comment not found" });
+  }
+};
