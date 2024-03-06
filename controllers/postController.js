@@ -49,3 +49,33 @@ exports.post_post = [
     }
   },
 ];
+
+exports.put_post = [
+  body("title").isLength({ min: 1, max: 30 }).escape(),
+  body("text").isLength({ min: 1 }).escape(),
+  body("isPublished").isBoolean().escape(),
+
+  async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+
+      if (!errors.isEmpty()) {
+        return res.status(401).json({ errors: errors.array() });
+      }
+
+      const post = new Post({
+        _id: req.params.id,
+        title: req.body.title,
+        text: req.body.text,
+        date: Date.now(),
+        author: req.user.user._id,
+        isPublished: req.body.isPublished,
+      });
+
+      await Post.findByIdAndUpdate(req.params.id, post, {});
+      return res.status(200).json({ post: post });
+    } catch (err) {
+      return next(err);
+    }
+  },
+];
