@@ -58,7 +58,7 @@ exports.isAdmin = async (req, res, next) => {
     if (user && user.admin === true) {
       return next();
     } else {
-      return res.status(401).json({ message: "Only admins can create posts" });
+      return res.status(401).json({ message: "Only admins have permission" });
     }
   } catch (err) {
     return res.status(500).json({ message: "Internal Server Error" });

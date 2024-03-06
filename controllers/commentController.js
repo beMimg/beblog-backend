@@ -88,3 +88,19 @@ exports.put_comment = async (req, res, next) => {
     return res.status(404).json({ message: "Comment not found" });
   }
 };
+
+exports.delete_comment = async (req, res, next) => {
+  try {
+    const comment = await Comment.findById(req.params.comment_id);
+    if (!comment) {
+      return res.status(404).json({ message: "Comment not found" });
+    }
+    await Comment.findByIdAndDelete(req.params.comment_id);
+
+    return res
+      .status(200)
+      .json({ message: `Comment ${req.params.comment_id} is deleted` });
+  } catch (err) {
+    return next(err);
+  }
+};
