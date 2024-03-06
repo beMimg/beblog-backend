@@ -81,7 +81,7 @@ exports.put_post = [
         isPublished: req.body.isPublished,
       });
 
-      await Post.findByIdAndUpdate(post_, post, {});
+      await Post.findByIdAndUpdate(req.params.post_id, post, {});
       return res.status(200).json({ post: post });
     } catch (err) {
       return res.status(404).json({ message: "Post not found" });
@@ -91,8 +91,8 @@ exports.put_post = [
 
 exports.delete_post = async (req, res, next) => {
   try {
-    await Post.findByIdAndDelete(post_);
-    res.status(200).json({ message: `Post ${post_} was deleted` });
+    await Post.findByIdAndDelete(req.params.post_id);
+    res.status(200).json({ message: `Post ${req.params.post_id} was deleted` });
   } catch (err) {
     return res.status(404).json({ message: "Post not found" });
   }

@@ -9,4 +9,5 @@ router.post("/", authenticateToken, commentController.post_comment);
 
 router.get("/:comment_id", authenticateToken, commentController.get_comment);
 
+router.put("/:comment_id", authenticateToken, commentController.put_comment);
 module.exports = router;

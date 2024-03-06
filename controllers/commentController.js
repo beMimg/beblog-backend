@@ -37,7 +37,9 @@ exports.post_comment = async (req, res, next) => {
       await comment.save();
       return res.status(200).json({ comment: comment });
     }
-  } catch (err) {}
+  } catch (err) {
+    return next(err);
+  }
 };
 
 exports.get_comment = async (req, res, next) => {
@@ -50,6 +52,30 @@ exports.get_comment = async (req, res, next) => {
     }
 
     return res.status(200).json({ comment: comment });
+  } catch (err) {
+    return res.status(404).json({ message: "Comment not found" });
+  }
+};
+
+exports.put_comment = async (req, res, next) => {
+  try {
+    const existsPost = await Post.findById(req.params.post_id, "_id");
+    const comment = await Comment.findById(req.params.comment_id);
+
+    if (existsPost === null) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    const newComment = new Comment({
+      _id: comment._id,
+      author: comment.author,
+      post: comment.post,
+      text: req.body.text,
+      date: comment.date,
+    });
+
+    await Comment.findByIdAndUpdate(req.params.comment_id, newComment, {});
+    return res.status(200).json({ newComment: newComment });
   } catch (err) {
     return res.status(404).json({ message: "Comment not found" });
   }
