@@ -6,6 +6,7 @@ const { authenticateToken } = require("../config/authenticate");
 router.get("/", authenticateToken, userController.get_users);
 
 router.post("/", userController.post_user);
+router.get("/self", authenticateToken, userController.get_user_self);
 
 router.get("/:id", authenticateToken, userController.get_user);
 

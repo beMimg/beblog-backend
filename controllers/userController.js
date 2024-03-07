@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const { body, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const { invalidateToken } = require("../config/authenticate");
+const getRandomColor = require("../config/randomColor");
 
 exports.get_users = async (req, res) => {
   try {
@@ -16,8 +17,8 @@ exports.get_users = async (req, res) => {
 exports.post_user = [
   body("first_name").trim().isLength({ min: 1 }).escape(),
   body("last_name").trim().isLength({ min: 1 }).escape(),
-  body("email").trim().escape().isEmail(),
-  body("username").trim().isLength({ min: 1 }).escape(),
+  body("email").trim().escape().isEmail().withMessage("This email is invalid"),
+  body("username").trim().isLength({ min: 4 }).escape(),
   body("password")
     .trim()
     .isLength({ min: 6 })
@@ -48,6 +49,7 @@ exports.post_user = [
       password: hashedPassword,
       creation: Date.now(),
       admin: false,
+      color: getRandomColor(),
     });
 
     if (!errors.isEmpty()) {
@@ -81,7 +83,6 @@ exports.put_user = [
   body("first_name").trim().isLength({ min: 1 }).escape(),
   body("last_name").trim().isLength({ min: 1 }).escape(),
   body("email").trim().escape().isEmail(),
-  body("username").trim().isLength({ min: 1 }).escape(),
   body("password")
     .trim()
     .isLength({ min: 6 })
@@ -98,6 +99,7 @@ exports.put_user = [
       return value === req.body.password;
     })
     .withMessage("Passwords didn't match."),
+  body("color").trim().isLength({ min: 1 }).escape(),
 
   async (req, res, next) => {
     try {
@@ -128,10 +130,11 @@ exports.put_user = [
         first_name: req.body.first_name,
         last_name: req.body.last_name,
         email: req.body.email,
-        username: req.body.username,
+        username: req.user.user.username,
         password: hashedPassword,
         creation: req.user.user.creation,
         admin: false,
+        color: req.body.color,
       });
 
       await User.findByIdAndUpdate(req.user.user._id, user, {});
@@ -153,6 +156,19 @@ exports.delete_user = async (req, res, next) => {
     const token = req.headers.authorization;
     invalidateToken(token);
     res.status(200).json({ message: "user deleted" });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+exports.get_user_self = async (req, res, next) => {
+  try {
+    const user = await User.findById(
+      req.user.user._id,
+      "first_name last_name email username"
+    ).exec();
+
+    return res.status(200).json({ user: user });
   } catch (err) {
     return next(err);
   }
