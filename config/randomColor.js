@@ -1,16 +1,4 @@
-const colors = [
-  "dark-red",
-  "light-red",
-  "dark-blue",
-  "light-blue",
-  "dark-green",
-  "light-green",
-  "dark-green",
-  "pink",
-  "purple",
-  "orange",
-  "gray",
-];
+const colors = ["red", "green", "blue", "pink", "purple", "orange", "gray"];
 
 function getRandomColor() {
   let randomNum = Math.floor(Math.random() * colors.length);
