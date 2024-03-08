@@ -174,22 +174,26 @@ exports.get_user_self = async (req, res, next) => {
   }
 };
 
-exports.put_user_color = async (req, res, next) => {
-  try {
-    if (req.params.id !== req.user.user._id) {
-      return res
-        .status(403)
-        .json({ message: "You are not allowed to modify other users" });
-    }
+exports.put_user_color = [
+  body("color").trim().isLength({ min: 1 }).escape(),
 
-    const color = req.body.color;
+  async (req, res, next) => {
+    try {
+      if (req.params.id !== req.user.user._id) {
+        return res
+          .status(403)
+          .json({ message: "You are not allowed to modify other users" });
+      }
 
-    if (!color) {
-      return res.status(400).json({ message: "Color is required" });
+      const color = req.body.color;
+
+      if (!color) {
+        return res.status(400).json({ message: "Color is required" });
+      }
+      await User.findByIdAndUpdate(req.user.user._id, { color }, { new: true });
+      return res.status(200).json({ message: "User color updated sucessfuly" });
+    } catch (err) {
+      return next(err);
     }
-    await User.findByIdAndUpdate(req.user.user._id, { color }, { new: true });
-    return res.status(200).json({ message: "User color updated sucessfuly" });
-  } catch (err) {
-    return next(err);
-  }
-};
+  },
+];
