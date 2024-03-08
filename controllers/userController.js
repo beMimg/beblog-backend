@@ -173,3 +173,23 @@ exports.get_user_self = async (req, res, next) => {
     return next(err);
   }
 };
+
+exports.put_user_color = async (req, res, next) => {
+  try {
+    if (req.params.id !== req.user.user._id) {
+      return res
+        .status(403)
+        .json({ message: "You are not allowed to modify other users" });
+    }
+
+    const color = req.body.color;
+
+    if (!color) {
+      return res.status(400).json({ message: "Color is required" });
+    }
+    await User.findByIdAndUpdate(req.user.user._id, { color }, { new: true });
+    return res.status(200).json({ message: "User color updated sucessfuly" });
+  } catch (err) {
+    return next(err);
+  }
+};
