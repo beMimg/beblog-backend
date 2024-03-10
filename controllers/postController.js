@@ -7,10 +7,9 @@ exports.get_posts = async (req, res, next) => {
   try {
     const posts = await Post.find(
       { isPublished: true },
-      "title date text author"
+      "title date text author formated_date topic"
     )
       .populate({ path: "author", select: "first_name last_name username" })
-
       .exec();
 
     if (posts) {
