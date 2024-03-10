@@ -5,8 +5,12 @@ const { body, validationResult } = require("express-validator");
 // get only published posts
 exports.get_posts = async (req, res, next) => {
   try {
-    const posts = await Post.find({}, "title date author")
+    const posts = await Post.find(
+      { isPublished: true },
+      "title date text author"
+    )
       .populate({ path: "author", select: "first_name last_name username" })
+
       .exec();
 
     if (posts) {
