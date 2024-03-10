@@ -29,6 +29,7 @@ exports.post_post = [
   body("title").isLength({ min: 1, max: 30 }).escape(),
   body("text").isLength({ min: 1 }).escape(),
   body("isPublished").isBoolean().escape(),
+  body("topic").isLength({ min: 1 }).escape(),
 
   async (req, res, next) => {
     try {
@@ -44,6 +45,7 @@ exports.post_post = [
         date: Date.now(),
         author: req.user.user._id,
         isPublished: req.body.isPublished,
+        topic: req.body.topic,
       });
 
       await post.save();
