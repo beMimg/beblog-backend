@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Comment = require("../models/comment");
 const Post = require("../models/post");
+const { body, validationResult } = require("express-validator");
 
 exports.get_comments = async (req, res, next) => {
   try {
@@ -22,26 +23,32 @@ exports.get_comments = async (req, res, next) => {
   }
 };
 
-exports.post_comment = async (req, res, next) => {
-  try {
-    const comment = new Comment({
-      author: req.user.user._id,
-      post: req.params.post_id,
-      text: req.body.text,
-      date: Date.now(),
-    });
-    const existsPost = await Post.findById(req.params.post_id).exec();
+exports.post_comment = [
+  body("text").isLength({ max: 200 }).escape(),
 
-    if (!existsPost) {
-      return res.status(404).json({ message: "Post not found" });
-    } else {
-      await comment.save();
-      return res.status(200).json({ comment: comment });
+  async (req, res, next) => {
+    const errors = validationResult(req);
+
+    try {
+      const comment = new Comment({
+        author: req.user.user._id,
+        post: req.params.post_id,
+        text: req.body.text,
+        date: Date.now(),
+      });
+      const existsPost = await Post.findById(req.params.post_id).exec();
+
+      if (!existsPost) {
+        return res.status(404).json({ message: "Post not found" });
+      } else {
+        await comment.save();
+        return res.status(200).json({ comment: comment });
+      }
+    } catch (err) {
+      return next(err);
     }
-  } catch (err) {
-    return next(err);
-  }
-};
+  },
+];
 
 exports.get_comment = async (req, res, next) => {
   try {
@@ -103,5 +110,23 @@ exports.delete_comment = async (req, res, next) => {
       .json({ message: `Comment ${req.params.comment_id} is deleted` });
   } catch (err) {
     return next(err);
+  }
+};
+
+exports.get_comments_count = async (req, res, next) => {
+  try {
+    const existsPost = await Post.findById(req.params.post_id);
+
+    if (existsPost === null) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    const commentsCount = await Comment.find({
+      post: req.params.post_id,
+    }).countDocuments();
+
+    return res.status(200).json({ commentsCount: commentsCount });
+  } catch (err) {
+    return res.status(404).json({ message: "Comment not found" });
   }
 };
