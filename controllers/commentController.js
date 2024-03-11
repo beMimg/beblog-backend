@@ -8,7 +8,7 @@ exports.get_comments = async (req, res, next) => {
       { post: req.params.post_id },
       "text author date"
     )
-      .populate({ path: "author", select: "username" })
+      .populate({ path: "author", select: "username color" })
       .exec();
 
     if (!comments) {

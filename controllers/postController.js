@@ -57,7 +57,10 @@ exports.post_post = [
 
 exports.get_post = async (req, res, next) => {
   try {
-    const post = await Post.findById(req.params.post_id);
+    const post = await Post.findById(req.params.post_id).populate({
+      path: "author",
+      select: "username",
+    });
     return res.status(200).json({ post: post });
   } catch (err) {
     return res.status(404).json({ message: "Post not found" });
