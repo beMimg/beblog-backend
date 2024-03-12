@@ -68,11 +68,23 @@ exports.post_post = [
 
 exports.get_post = async (req, res, next) => {
   try {
-    const post = await Post.findById(req.params.post_id).populate({
-      path: "author",
-      select: "username",
-    });
-    return res.status(200).json({ post: post });
+    const post = await Post.findById(req.params.post_id)
+      .populate({
+        path: "author",
+        select: "username",
+      })
+      .exec();
+
+    const imgData = post.img.data.toString("base64");
+    const imgSrc = `data:${post.img.contentType};base64,${imgData}`;
+
+    const postWithImgSrc = {
+      ...post.toJSON(),
+      imgSrc: imgSrc,
+    };
+
+    // Send the modified post object as the response
+    return res.status(200).json({ post: postWithImgSrc });
   } catch (err) {
     return res.status(404).json({ message: "Post not found" });
   }
