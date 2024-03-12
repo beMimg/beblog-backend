@@ -10,6 +10,7 @@ exports.get_posts = async (req, res, next) => {
       "title date text author formated_date topic"
     )
       .populate({ path: "author", select: "first_name last_name username" })
+      .sort({ date: -1 })
       .exec();
 
     if (posts) {

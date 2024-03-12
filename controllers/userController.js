@@ -165,7 +165,7 @@ exports.get_user_self = async (req, res, next) => {
   try {
     const user = await User.findById(
       req.user.user._id,
-      "first_name last_name email username color"
+      "first_name last_name email username color admin"
     ).exec();
 
     return res.status(200).json({ user: user });
