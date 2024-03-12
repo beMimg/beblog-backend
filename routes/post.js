@@ -3,10 +3,17 @@ const router = express.Router();
 const postController = require("../controllers/postController");
 const { authenticateToken, isAdmin } = require("../config/authenticate");
 const commentsRouter = require("../routes/comment");
+const { upload } = require("../middleware/multer");
 
 router.get("/", postController.get_posts);
 
-router.post("/", authenticateToken, isAdmin, postController.post_post);
+router.post(
+  "/",
+  authenticateToken,
+  isAdmin,
+  upload.single("img"),
+  postController.post_post
+);
 
 router.get("/:post_id", authenticateToken, postController.get_post);
 

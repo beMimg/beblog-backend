@@ -10,6 +10,7 @@ const PostSchema = new Schema(
     author: { type: Schema.Types.ObjectId, ref: "User", required: true },
     isPublished: { type: Boolean, required: true },
     topic: { type: String, required: true },
+    img: { data: Buffer, contentType: String },
   },
   {
     toJSON: { virtuals: true },

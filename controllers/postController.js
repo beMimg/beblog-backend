@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const Post = require("../models/post");
 const { body, validationResult } = require("express-validator");
+const fs = require("fs").promises;
+const path = require("path");
 
 // get only published posts
 exports.get_posts = async (req, res, next) => {
@@ -39,6 +41,10 @@ exports.post_post = [
         return res.status(401).json({ errors: errors.array() });
       }
 
+      const imgData = await fs.readFile(
+        path.join(__dirname, "../images", req.file.filename)
+      );
+
       const post = new Post({
         title: req.body.title,
         text: req.body.text,
@@ -46,6 +52,10 @@ exports.post_post = [
         author: req.user.user._id,
         isPublished: req.body.isPublished,
         topic: req.body.topic,
+        img: {
+          data: imgData,
+          contentType: req.file.mimetype,
+        },
       });
 
       await post.save();
