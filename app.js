@@ -8,6 +8,8 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const compression = require("compression");
 const helmet = require("helmet");
+const RateLimit = require("express-rate-limit");
+
 // routes
 var indexRouter = require("./routes");
 const userRouter = require("./routes/user");
@@ -27,14 +29,13 @@ async function main() {
 }
 main();
 
-// const RateLimit = require("express-rate-limit");
-// const limiter = RateLimit({
-//   windowMs: 1 * 60 * 1000, // 1 minute
-//   max: 20,
-// });
+const limiter = RateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 20,
+});
 
-// // view engine setup
-// app.use(limiter);
+// view engine setup
+app.use(limiter);
 app.use(helmet());
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");
