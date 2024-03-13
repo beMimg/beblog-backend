@@ -27,16 +27,14 @@ async function main() {
 }
 main();
 
-app.set("trust proxy", true);
+// const RateLimit = require("express-rate-limit");
+// const limiter = RateLimit({
+//   windowMs: 1 * 60 * 1000, // 1 minute
+//   max: 20,
+// });
 
-const RateLimit = require("express-rate-limit");
-const limiter = RateLimit({
-  windowMs: 1 * 60 * 1000, // 1 minute
-  max: 20,
-});
-
-// view engine setup
-app.use(limiter);
+// // view engine setup
+// app.use(limiter);
 app.use(helmet());
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");
