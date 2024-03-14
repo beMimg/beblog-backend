@@ -29,7 +29,7 @@ exports.get_posts = async (req, res, next) => {
 
 exports.post_post = [
   body("title").isLength({ min: 1, max: 30 }).escape(),
-  body("text").isLength({ min: 1 }).escape(),
+  body("text").isLength({ min: 1 }),
   body("isPublished").isBoolean().escape(),
   body("topic").isLength({ min: 1 }).escape(),
 
