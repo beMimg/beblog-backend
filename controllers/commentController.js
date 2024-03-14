@@ -82,6 +82,12 @@ exports.put_comment = async (req, res, next) => {
         .json({ message: "You are not the author of this comment" });
     }
 
+    if (req.body.text.length === 0) {
+      return res
+        .status(401)
+        .json({ message: "Edit comment must have a value" });
+    }
+
     const newComment = new Comment({
       _id: comment._id,
       author: comment.author,
