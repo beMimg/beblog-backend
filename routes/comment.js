@@ -3,7 +3,7 @@ const router = express.Router({ mergeParams: true });
 const commentController = require("../controllers/commentController");
 const { authenticateToken, isAdmin } = require("../config/authenticate");
 
-router.get("/", authenticateToken, commentController.get_comments);
+router.get("/", commentController.get_comments);
 
 router.get("/count", commentController.get_comments_count);
 
