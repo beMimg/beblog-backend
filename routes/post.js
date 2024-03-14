@@ -15,7 +15,7 @@ router.post(
   postController.post_post
 );
 
-router.get("/:post_id", authenticateToken, postController.get_post);
+router.get("/:post_id", postController.get_post);
 
 router.put("/:post_id", authenticateToken, isAdmin, postController.put_post);
 
