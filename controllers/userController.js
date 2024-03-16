@@ -4,6 +4,7 @@ const { body, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const { invalidateToken } = require("../config/authenticate");
 const getRandomColor = require("../config/randomColor");
+const { DateTime } = require("luxon");
 
 exports.get_users = async (req, res) => {
   try {
@@ -47,7 +48,7 @@ exports.post_user = [
       email: req.body.email,
       username: req.body.username,
       password: hashedPassword,
-      creation: Date.now(),
+      creation: DateTime.now(),
       admin: false,
       color: getRandomColor(),
     });

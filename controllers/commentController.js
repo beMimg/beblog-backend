@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const Comment = require("../models/comment");
 const Post = require("../models/post");
 const { body, validationResult } = require("express-validator");
+const { DateTime } = require("luxon");
 
 exports.get_comments = async (req, res, next) => {
   try {
@@ -34,7 +35,7 @@ exports.post_comment = [
         author: req.user.user._id,
         post: req.params.post_id,
         text: req.body.text,
-        date: Date.now(),
+        date: DateTime.now(),
       });
       const existsPost = await Post.findById(req.params.post_id).exec();
 

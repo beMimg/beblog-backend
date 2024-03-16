@@ -3,6 +3,7 @@ const Post = require("../models/post");
 const { body, validationResult } = require("express-validator");
 const fs = require("fs").promises;
 const path = require("path");
+const { DateTime } = require("luxon");
 
 // get only published posts
 exports.get_posts = async (req, res, next) => {
@@ -48,7 +49,7 @@ exports.post_post = [
       const post = new Post({
         title: req.body.title,
         text: req.body.text,
-        date: Date.now(),
+        date: DateTime.now(),
         author: req.user.user._id,
         isPublished: req.body.isPublished,
         topic: req.body.topic,
@@ -107,7 +108,7 @@ exports.put_post = [
         _id: req.params.post_id,
         title: req.body.title,
         text: req.body.text,
-        date: Date.now(),
+        date: DateTime.now(),
         author: req.user.user._id,
         isPublished: req.body.isPublished,
       });
