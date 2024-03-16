@@ -35,7 +35,7 @@ const limiter = RateLimit({
 });
 
 // view engine setup
-app.use(limiter);
+// app.use(limiter);
 app.use(helmet());
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");
