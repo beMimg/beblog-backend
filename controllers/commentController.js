@@ -53,10 +53,12 @@ exports.post_comment = [
 
 exports.get_comment = async (req, res, next) => {
   try {
-    const comment = await Comment.findById(req.params.comment_id).populate({
-      path: "author",
-      select: "username color",
-    });
+    const comment = await Comment.findById(req.params.comment_id)
+      .populate({
+        path: "author",
+        select: "username color",
+      })
+      .exec();
 
     const existsPost = await Post.findById(req.params.post_id, "_id");
 
