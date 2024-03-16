@@ -53,10 +53,17 @@ exports.post_comment = [
 
 exports.get_comment = async (req, res, next) => {
   try {
-    const comment = await Comment.findById(req.params.comment_id);
+    const comment = await Comment.findById(req.params.comment_id).populate({
+      path: "author",
+      select: "username color",
+    });
+
     const existsPost = await Post.findById(req.params.post_id, "_id");
 
-    if (comment.author._id === req.user.user._id) console.log("not the same");
+    if (comment.author._id === req.user.user._id) {
+      return console.log("not the same");
+    }
+
     if (existsPost === null) {
       return res.status(404).json({ message: "Post not found" });
     }
