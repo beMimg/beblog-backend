@@ -35,6 +35,7 @@ exports.post_comment = [
         author: req.user.user._id,
         post: req.params.post_id,
         text: req.body.text,
+        date: Date.now(),
       });
       const existsPost = await Post.findById(req.params.post_id).exec();
 
